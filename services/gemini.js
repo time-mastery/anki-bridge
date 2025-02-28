@@ -1,7 +1,12 @@
 class GeminiService {
   constructor() {
-    this.API_URL =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    // Default model
+    this.modelName = "gemini-2.0-flash";
+    this.API_URL = this.getApiUrl();
+  }
+
+  getApiUrl() {
+    return `https://generativelanguage.googleapis.com/v1beta/models/${this.modelName}:generateContent`;
   }
 
   async getApiKey() {
@@ -13,10 +18,33 @@ class GeminiService {
     return apiKey;
   }
 
+  async getModel() {
+    const { model } = await chrome.storage.local.get(["model"]);
+    return model || "gemini-2.0-flash"; // Default model
+  }
+
+  async setModel(modelName) {
+    this.modelName = modelName;
+    this.API_URL = this.getApiUrl();
+    await chrome.storage.local.set({ model: modelName });
+  }
+
   async translate(text, targetLanguage) {
     try {
       const API_KEY = await this.getApiKey();
-      const prompt = `Translate the following text accurately to ${targetLanguage}. You must provide ONLY the direct translation without ANY explanations, notes, or additional text:\n"${text}"`;
+      // Update model before making request
+      this.modelName = await this.getModel();
+      this.API_URL = this.getApiUrl();
+
+      const prompt = `Translate the following text accurately to ${targetLanguage}. 
+      Provide ONLY the direct translation without ANY explanations, notes, or additional text. 
+      Maintain the original formatting, including paragraphs, bullet points, and line breaks.
+      Preserve the tone, formality level, and style of the original text.
+      If there are any culturally specific terms that don't have direct equivalents, choose the most appropriate translation that preserves the original meaning.
+      Do not add or remove any information from the original text.
+      Here is the text to translate:
+      
+      "${text}"`;
 
       const response = await fetch(`${this.API_URL}?key=${API_KEY}`, {
         method: "POST",
