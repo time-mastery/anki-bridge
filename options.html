@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Extension Settings</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="options-page">
+    <div class="container settings-container">
+      <h2>API Key Settings</h2>
+
+      <div class="video-container">
+        <h3>How to get your API Key</h3>
+        <div class="video-wrapper">
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/o8iyrtQyrZM?si=8ozo0ocxreiQgSnu"
+            title="How to get Gemini API Key"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          >
+          </iframe>
+        </div>
+      </div>
+
+      <div class="settings-form">
+        <div class="form-group">
+          <label for="apiKey">Gemini API Key</label>
+          <input type="password" id="apiKey" placeholder="Enter your API key" />
+        </div>
+        <button id="saveSettings" class="save-btn">Save</button>
+        <p id="status" class="status-message"></p>
+      </div>
+    </div>
+    <script src="options.js"></script>
+  </body>
+</html>

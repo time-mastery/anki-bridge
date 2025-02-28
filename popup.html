@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Language Learning Assistant</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="hint-text">
+        <p>Select a language below to translate the highlighted text</p>
+      </div>
+      <div class="language-selector">
+        <select id="languageSelect" class="language-dropdown">
+          <option value="en">English</option>
+          <option value="fa">Persian</option>
+        </select>
+      </div>
+
+      <div class="selected-text">
+        <h3>Selected Text</h3>
+        <div class="text-with-audio">
+          <p id="original-text" class="text-bold"></p>
+          <button id="speakButton" class="speak-btn">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path d="M11 5L6 9H2v6h4l5 4V5z" />
+              <path
+                d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="synonyms">
+        <h3>Synonyms</h3>
+        <div id="synonyms-text" class="synonyms-list"></div>
+      </div>
+
+      <div class="translation-section">
+        <div class="translation">
+          <h3>Translation</h3>
+          <p id="translated-text" class="text-light"></p>
+        </div>
+        <div class="artikel">
+          <h3>Article</h3>
+          <p id="artikel-text"></p>
+        </div>
+      </div>
+
+      <div class="example-sentence">
+        <h3>Example Sentence</h3>
+        <p id="example-sentence-text"></p>
+      </div>
+
+      <div class="hint-text">
+        <p>Copy the front and back text below to create a new card in Anki</p>
+      </div>
+      <div class="anki-buttons">
+        <button id="copyFront" class="anki-btn">
+          <span>Copy Front</span>
+        </button>
+        <button id="copyBack" class="anki-btn">
+          <span>Copy Back</span>
+        </button>
+      </div>
+      <!-- Add this before the closing div.container -->
+      <div class="api-settings">
+        <h3>API Settings</h3>
+        <div class="api-buttons">
+          <button id="changeApiKey" class="settings-btn">
+            <span>Change API Key</span>
+          </button>
+          <button id="clearApiKey" class="settings-btn warning">
+            <span>Clear API Key</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <script src="popup.js" type="module"></script>
+  </body>
+</html>
