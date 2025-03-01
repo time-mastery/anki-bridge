@@ -16,6 +16,64 @@ document.addEventListener("DOMContentLoaded", async function () {
   const manualWordInput = document.getElementById("manualWordInput");
   const getWordDetailsBtn = document.getElementById("getWordDetailsBtn");
 
+  let detectedLanguage = "en";
+
+  async function fetchWordDetails(word) {
+    try {
+      translatedText.textContent = "Fetching details...";
+      translatedText.classList.add("loading");
+      exampleSentenceText.textContent = "";
+      synonymsText.innerHTML = "";
+      artikelText.textContent = "";
+
+      const languageMap = {
+        en: "English",
+        es: "Spanish",
+        fr: "French",
+        zh: "Mandarin Chinese",
+        de: "German",
+        fa: "Persian",
+        ja: "Japanese",
+        it: "Italian",
+        ko: "Korean",
+        ru: "Russian",
+        pt: "Portuguese",
+        uk: "Ukrainian",
+      };
+
+      const targetLang = languageMap[languageSelect.value] || "English";
+
+      const details = await geminiService.getWordDetails(word, targetLang);
+
+      detectedLanguage = details.language;
+      translatedText.textContent = details.translation || "No translation available";
+      exampleSentenceText.textContent = details.example || "No example available";
+
+      if (details.synonyms && details.synonyms.length > 0) {
+        synonymsText.innerHTML = details.synonyms
+          .map((syn) => `<span class="synonym-tag">${syn}</span>`)
+          .join("");
+      }
+
+      if (details.article) {
+        artikelText.innerHTML = `<span class="artikel-badge">${details.article}</span>`;
+      }
+
+      translatedText.classList.remove("loading");
+    } catch (error) {
+      translatedText.classList.remove("loading");
+      if (error.message.includes("Resource has been exhausted")) {
+        translatedText.textContent = "API quota exceeded. Please try again later.";
+      } else {
+        translatedText.textContent = "Failed to fetch details. Please try again.";
+        console.error("Error fetching word details:", error);
+      }
+      exampleSentenceText.textContent = "";
+      synonymsText.innerHTML = "";
+      artikelText.textContent = "";
+    }
+  }
+
   changeApiKeyBtn.addEventListener("click", () => {
     chrome.runtime.openOptionsPage();
   });
@@ -41,15 +99,29 @@ document.addEventListener("DOMContentLoaded", async function () {
   speakButton.addEventListener("click", () => {
     const text = originalText.textContent;
     if (text) {
+      const languageMap = {
+        en: "en-US",
+        es: "es-ES",
+        fr: "fr-FR",
+        zh: "zh-CN",
+        de: "de-DE",
+        fa: "fa-IR",
+        ja: "ja-JP",
+        ko: "ko-KR",
+        ru: "ru-RU",
+        it: "it-IT",
+      };
+
+      const selectedLang = languageMap[detectedLanguage] || "en-US";
+
       const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = selectedLang;
       utterance.rate = 0.9;
       speechSynthesis.speak(utterance);
     }
   });
 
-  const { preferredLanguage } = await chrome.storage.sync.get([
-    "preferredLanguage",
-  ]);
+  const { preferredLanguage } = await chrome.storage.sync.get(["preferredLanguage"]);
   if (preferredLanguage) {
     languageSelect.value = preferredLanguage;
   }
@@ -83,6 +155,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       await fetchWordDetails(word);
     }
   });
+
   async function translateText(text) {
     try {
       translatedText.textContent = "Translating...";
@@ -114,6 +187,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         try {
           const details = await geminiService.getWordDetails(text, targetLang);
 
+          detectedLanguage = details.language || "en"; // Update detected language
           translatedText.textContent = details.translation;
           exampleSentenceText.textContent = details.example;
 
@@ -152,65 +226,6 @@ document.addEventListener("DOMContentLoaded", async function () {
     } catch (error) {
       translatedText.classList.remove("loading");
       translatedText.textContent = "Translation failed. Please try again.";
-      exampleSentenceText.textContent = "";
-      synonymsText.innerHTML = "";
-      artikelText.textContent = "";
-    }
-  }
-
-  async function fetchWordDetails(word) {
-    try {
-      translatedText.textContent = "Fetching details...";
-      translatedText.classList.add("loading");
-      exampleSentenceText.textContent = "";
-      synonymsText.innerHTML = "";
-      artikelText.textContent = "";
-
-      const languageMap = {
-        en: "English",
-        es: "Spanish",
-        fr: "French",
-        zh: "Mandarin Chinese",
-        de: "German",
-        fa: "Persian",
-        ja: "Japanese",
-        it: "Italian",
-        ko: "Korean",
-        ru: "Russian",
-        pt: "Portuguese",
-        uk: "Ukrainian",
-      };
-
-      const targetLang = languageMap[languageSelect.value] || "English";
-
-      const details = await geminiService.getWordDetails(word, targetLang);
-
-      translatedText.textContent =
-        details.translation || "No translation available";
-      exampleSentenceText.textContent =
-        details.example || "No example available";
-
-      if (details.synonyms && details.synonyms.length > 0) {
-        synonymsText.innerHTML = details.synonyms
-          .map((syn) => `<span class="synonym-tag">${syn}</span>`)
-          .join("");
-      }
-
-      if (details.article) {
-        artikelText.innerHTML = `<span class="artikel-badge">${details.article}</span>`;
-      }
-
-      translatedText.classList.remove("loading");
-    } catch (error) {
-      translatedText.classList.remove("loading");
-      if (error.message.includes("Resource has been exhausted")) {
-        translatedText.textContent =
-          "API quota exceeded. Please try again later.";
-      } else {
-        translatedText.textContent =
-          "Failed to fetch details. Please try again.";
-        console.error("Error fetching word details:", error);
-      }
       exampleSentenceText.textContent = "";
       synonymsText.innerHTML = "";
       artikelText.textContent = "";
@@ -264,9 +279,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const translation = translatedText.textContent;
     const article = artikelText.textContent;
     const example = exampleSentenceText.textContent;
-    const synonyms = Array.from(
-      synonymsText.getElementsByClassName("synonym-tag")
-    )
+    const synonyms = Array.from(synonymsText.getElementsByClassName("synonym-tag"))
       .map((tag) => tag.textContent)
       .join(", ");
 

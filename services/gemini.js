@@ -37,13 +37,15 @@ class GeminiService {
       this.API_URL = this.getApiUrl();
 
       const prompt = `Analyze the word "${word}" and provide the following information in a structured JSON format:
-      1. translation: Translate the word to ${targetLanguage}
-      2. example: Create a practical example sentence using this word in its original language
-      3. synonyms: List EXACTLY two common synonyms for the word in its original language
-      4. article: If the word is a German noun, provide its definite article (der, die, or das); otherwise return an empty string
+      1. language: Detect the language of the word
+      2. translation: Translate the word to ${targetLanguage}
+      3. example: Create a practical example sentence using this word in its original language
+      4. synonyms: List EXACTLY two common synonyms for the word in its original language
+      5. article: If the word is a German noun, provide its definite article (der, die, or das); otherwise return an empty string
       
       Return response in this exact JSON format without any additional text:
       {
+        "language": "detected language (en/es/fr/de/it/ja/ko/ru/zh/fa)",
         "translation": "translation of the word",
         "example": "example sentence using the word",
         "synonyms": ["synonym1", "synonym2"],
@@ -88,6 +90,7 @@ class GeminiService {
         if (jsonMatch) {
           const result = JSON.parse(jsonMatch[0]);
           return {
+            language: result.language || "",
             translation: result.translation || "",
             example: result.example || "",
             synonyms: Array.isArray(result.synonyms) ? result.synonyms : [],
