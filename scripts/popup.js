@@ -13,14 +13,15 @@ document.addEventListener("DOMContentLoaded", async function () {
   const changeApiKeyBtn = document.getElementById("changeApiKey");
   const clearApiKeyBtn = document.getElementById("clearApiKey");
 
-  // API key management
+  const manualWordInput = document.getElementById("manualWordInput");
+  const getWordDetailsBtn = document.getElementById("getWordDetailsBtn");
+
   changeApiKeyBtn.addEventListener("click", () => {
     chrome.runtime.openOptionsPage();
   });
 
   const openSettingsBtn = document.getElementById("openSettings");
 
-  // Add this with your other event listeners
   openSettingsBtn.addEventListener("click", () => {
     chrome.runtime.openOptionsPage();
   });
@@ -37,21 +38,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // Add speech functionality
   speakButton.addEventListener("click", () => {
     const text = originalText.textContent;
     if (text) {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "de-DE"; // Set German language
-      utterance.rate = 0.9; // Slightly slower for better clarity
+      utterance.lang = "de-DE";
+      utterance.rate = 0.9;
       speechSynthesis.speak(utterance);
     }
   });
 
-  // Load saved language preference
-  const { preferredLanguage } = await chrome.storage.sync.get([
-    "preferredLanguage",
-  ]);
+  const { preferredLanguage } = await chrome.storage.sync.get(["preferredLanguage"]);
   if (preferredLanguage) {
     languageSelect.value = preferredLanguage;
   }
@@ -77,9 +74,17 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
+  // Event listener for the "Get Details" button
+  getWordDetailsBtn.addEventListener("click", async function () {
+    const word = manualWordInput.value.trim();
+    if (word) {
+      originalText.textContent = word;
+      await fetchWordDetails(word);
+    }
+  });
+
   async function translateText(text) {
     try {
-      // Add loading states
       translatedText.textContent = "Translating...";
       translatedText.classList.add("loading");
       exampleSentenceText.textContent = "";
@@ -88,44 +93,46 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const targetLang = languageSelect.value === "en" ? "English" : "Persian";
 
-      // Check if it's a single word
       const isWord = !text.includes(" ");
 
       if (isWord) {
         try {
-          // Get all word details
           const details = await geminiService.getWordDetails(text, targetLang);
 
           translatedText.textContent = details.translation;
           exampleSentenceText.textContent = details.example;
 
-          // Display synonyms as tags
           if (details.synonyms && details.synonyms.length > 0) {
             synonymsText.innerHTML = details.synonyms
               .map((syn) => `<span class="synonym-tag">${syn}</span>`)
               .join("");
           }
 
-          // Show article for German words
           if (details.article) {
             artikelText.innerHTML = `<span class="artikel-badge">${details.article}</span>`;
           }
         } catch (modelError) {
-          showErrorDialog(`Model error: ${modelError.message || 'Unknown error with the selected model'}`);
+          showErrorDialog(
+            `Model error: ${
+              modelError.message || "Unknown error with the selected model"
+            }`
+          );
           throw modelError;
         }
       } else {
-        // Just translate the sentence
         try {
           const translation = await geminiService.translate(text, targetLang);
           translatedText.textContent = translation;
         } catch (modelError) {
-          showErrorDialog(`Model error: ${modelError.message || 'Unknown error with the selected model'}`);
+          showErrorDialog(
+            `Model error: ${
+              modelError.message || "Unknown error with the selected model"
+            }`
+          );
           throw modelError;
         }
       }
 
-      // Remove loading states
       translatedText.classList.remove("loading");
     } catch (error) {
       translatedText.classList.remove("loading");
@@ -136,10 +143,47 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // Add this function to show error dialog
+  async function fetchWordDetails(word) {
+    try {
+      translatedText.textContent = "Fetching details...";
+      translatedText.classList.add("loading");
+      exampleSentenceText.textContent = "";
+      synonymsText.innerHTML = "";
+      artikelText.textContent = "";
+
+      const targetLang = languageSelect.value === "en" ? "English" : "Persian";
+
+      const details = await geminiService.getWordDetails(word, targetLang);
+
+      translatedText.textContent = details.translation;
+      exampleSentenceText.textContent = details.example;
+
+      if (details.synonyms && details.synonyms.length > 0) {
+        synonymsText.innerHTML = details.synonyms
+          .map((syn) => `<span class="synonym-tag">${syn}</span>`)
+          .join("");
+      }
+
+      if (details.article) {
+        artikelText.innerHTML = `<span class="artikel-badge">${details.article}</span>`;
+      }
+
+      translatedText.classList.remove("loading");
+    } catch (error) {
+      if (error.message.includes("Resource has been exhausted")) {
+        translatedText.textContent = "API quota exceeded. Please try again later.";
+      } else {
+        translatedText.textContent = "Failed to fetch details. Please try again.";
+      }
+      exampleSentenceText.textContent = "";
+      synonymsText.innerHTML = "";
+      artikelText.textContent = "";
+    }
+  }
+
   function showErrorDialog(message) {
-    const dialog = document.createElement('div');
-    dialog.className = 'error-dialog';
+    const dialog = document.createElement("div");
+    dialog.className = "error-dialog";
     dialog.innerHTML = `
       <div class="error-content">
         <h3>Error</h3>
@@ -147,26 +191,36 @@ document.addEventListener("DOMContentLoaded", async function () {
         <button class="error-close-btn">Close</button>
       </div>
     `;
-    
+
     document.body.appendChild(dialog);
-    
+
     // Close button functionality
-    const closeBtn = dialog.querySelector('.error-close-btn');
-    closeBtn.addEventListener('click', () => {
+    const closeBtn = dialog.querySelector(".error-close-btn");
+    closeBtn.addEventListener("click", () => {
       document.body.removeChild(dialog);
     });
-    
+
     // Also close when clicking outside
-    dialog.addEventListener('click', (e) => {
+    dialog.addEventListener("click", (e) => {
       if (e.target === dialog) {
         document.body.removeChild(dialog);
       }
     });
   }
 
+  function copyToClipboard(text) {
+    if (document.hasFocus()) {
+      navigator.clipboard.writeText(text).catch((error) => {
+        console.error("Clipboard error:", error);
+      });
+    } else {
+      console.warn("Document is not focused. Clipboard operation aborted.");
+    }
+  }
+
   // Copy functionality
   copyFrontBtn.addEventListener("click", () => {
-    navigator.clipboard.writeText(originalText.textContent);
+    copyToClipboard(originalText.textContent);
   });
 
   copyBackBtn.addEventListener("click", () => {
@@ -174,9 +228,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     const translation = translatedText.textContent;
     const article = artikelText.textContent;
     const example = exampleSentenceText.textContent;
-    const synonyms = Array.from(
-      synonymsText.getElementsByClassName("synonym-tag")
-    )
+    const synonyms = Array.from(synonymsText.getElementsByClassName("synonym-tag"))
       .map((tag) => tag.textContent)
       .join(", ");
 
@@ -190,7 +242,7 @@ document.addEventListener("DOMContentLoaded", async function () {
       .filter(Boolean)
       .join("\n\n");
 
-    navigator.clipboard.writeText(formattedText);
+    copyToClipboard(formattedText);
   });
 
   navigator.clipboard.writeText(translatedText.textContent);
