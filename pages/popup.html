@@ -10,7 +10,6 @@
   </head>
   <body>
     <div class="container">
-      <!-- Add this at the top of the container -->
       <div class="settings-wrapper">
         <button id="openSettings" class="settings-icon" title="Settings">
           <svg
@@ -28,7 +27,6 @@
         </button>
       </div>
 
-      <!-- Rest of your container content -->
       <div class="hint-text">
         <p>Select a language below to translate the highlighted text</p>
       </div>
@@ -37,6 +35,12 @@
           <option value="en">English</option>
           <option value="fa">Persian</option>
         </select>
+      </div>
+
+      <div class="manual-input">
+        <h3>Enter a Word</h3>
+        <input type="text" id="manualWordInput" placeholder="Type a word here" />
+        <button id="getWordDetailsBtn" class="get-details-btn">Get Details</button>
       </div>
 
       <div class="selected-text">
@@ -92,7 +96,7 @@
           <span>Copy Back</span>
         </button>
       </div>
-      <!-- Add this before the closing div.container -->
+
       <div class="api-settings">
         <h3>API Settings</h3>
         <div class="api-buttons">

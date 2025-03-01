@@ -1,9 +1,9 @@
 body {
   width: 400px;
-  min-height: fit-content;  /* Allow body to expand */
+  min-height: fit-content;
   height: auto;
   padding: 16px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: #1a1a1a;
   color: #ffffff;
   margin: 0;
@@ -12,37 +12,40 @@ body {
 .container {
   display: flex;
   flex-direction: column;
-  gap: 12px;  /* Reduced from 16px for more compact layout */
+  gap: 12px;
 }
 
-/* Make sections more compact */
-.selected-text, .translation, .example-sentence, .synonyms, .artikel {
-  padding: 10px;  /* Reduced from 12px */
+.selected-text,
+.translation,
+.example-sentence,
+.synonyms,
+.artikel {
+  padding: 10px;
   margin-bottom: 0;
 }
 
-/* Reduce some vertical spacing */
 h3 {
-  margin: 0 0 6px 0;  /* Reduced from 8px */
+  margin: 0 0 6px 0;
 }
 
 .api-settings {
-  padding-top: 12px;  /* Reduced from 16px */
-  margin-top: 12px;  /* Reduced from 16px */
+  padding-top: 12px;
+  margin-top: 12px;
 }
 
-/* Adjust translation section for better layout with new width */
 .translation-section {
   display: flex;
-  gap: 16px;  /* Increased from 12px */
+  gap: 16px;
   align-items: flex-start;
 }
 
-/* Make text slightly larger for better readability */
-#original-text, #translated-text, #example-sentence-text {
-  font-size: 16px;  /* Increased from 15px */
-  line-height: 1.6;  /* Increased from 1.5 */
+#original-text,
+#translated-text,
+#example-sentence-text {
+  font-size: 16px;
+  line-height: 1.6;
 }
+
 .container {
   display: flex;
   flex-direction: column;
@@ -106,27 +109,31 @@ h3 {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
-/* Remove the arrow down icon */
 .language-selector::after {
   display: none;
 }
 
-/* Adjust the dropdown padding since we don't need space for the arrow */
 .language-dropdown {
   padding-right: 12px;
 }
 
-.word-section, .translation-section {
+.word-section,
+.translation-section {
   display: flex;
   gap: 12px;
   align-items: flex-start;
 }
 
-.word-section > div, .translation-section > div {
+.word-section > div,
+.translation-section > div {
   flex: 1;
 }
 
-.selected-text, .translation, .example-sentence, .synonyms, .artikel {
+.selected-text,
+.translation,
+.example-sentence,
+.synonyms,
+.artikel {
   padding: 12px;
   background-color: #27272a;
   border-radius: 8px;
@@ -160,7 +167,10 @@ h3 {
   color: #ffffff;
 }
 
-#translated-text, #example-sentence-text, #synonyms-text, #artikel-text {
+#translated-text,
+#example-sentence-text,
+#synonyms-text,
+#artikel-text {
   font-size: 15px;
   line-height: 1.5;
   margin: 0;
@@ -233,7 +243,7 @@ h3 {
 }
 
 .loading::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -247,7 +257,9 @@ h3 {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .text-with-audio {
   display: flex;
@@ -306,8 +318,8 @@ h3 {
   border-radius: 8px;
   color: #fff;
   font-size: 14px;
-  width: 100%;  /* Ensure input takes full width */
-  min-width: 400px; /* Minimum width for input */
+  width: 100%;
+  min-width: 400px;
 }
 
 .save-btn {
@@ -367,7 +379,7 @@ h3 {
 
 .video-wrapper {
   position: relative;
-  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  padding-bottom: 56.25%;
   height: 0;
   overflow: hidden;
   background: #27272a;
@@ -384,16 +396,14 @@ h3 {
 }
 
 .settings-container {
-  max-width: 600px; /* Increased to accommodate video */
+  max-width: 600px;
 }
-/* Add a specific style for the options page body */
 body.options-page {
-  width: auto;  /* Override the popup width */
+  width: auto;
   min-width: 800px;
   min-height: 600px;
   padding: 0;
 }
-/* Add these styles for the settings icon */
 .settings-wrapper {
   position: absolute;
   top: 16px;
@@ -422,7 +432,6 @@ body.options-page {
 .settings-icon:active {
   transform: scale(0.95) rotate(30deg);
 }
-/* Error dialog styles */
 .error-dialog {
   position: fixed;
   top: 0;
@@ -471,4 +480,40 @@ body.options-page {
 
 .error-close-btn:hover {
   background-color: #dc2626;
+}
+
+.manual-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.manual-input input {
+  padding: 10px;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  background-color: #27272a;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.get-details-btn {
+  padding: 10px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.get-details-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.get-details-btn:active {
+  transform: translateY(0);
 }
