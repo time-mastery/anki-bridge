@@ -90,7 +90,10 @@ class GeminiService {
   async generateExample(text) {
     try {
       const API_KEY = await this.getApiKey();
-      const prompt = `Create a practical, contextually rich example sentence using the German word "${text}". The sentence must demonstrate proper usage in a realistic scenario. Return ONLY the example sentence in German without any explanation or translation.`;
+      const prompt = `Create a practical, contextually rich example sentence using the word "${text}". 
+      Detect the language of the word and ensure the example sentence is in the same language. 
+      The sentence must demonstrate proper usage in a realistic scenario. 
+      Return ONLY the example sentence without any explanation or translation.`;
 
       const response = await fetch(`${this.API_URL}?key=${API_KEY}`, {
         method: "POST",
@@ -136,7 +139,7 @@ class GeminiService {
   async getSynonyms(word) {
     try {
       const API_KEY = await this.getApiKey();
-      const prompt = `Provide EXACTLY 2 most essential and commonly used German synonyms for "${word}". These must be the most frequently used alternatives in everyday German speech. Return ONLY these 2 synonyms separated by a comma, without any additional text or explanation.`;
+      const prompt = `Provide EXACTLY 2 most essential and commonly used synonyms for "${word}" in its original language. These must be the most frequently used alternatives in everyday speech. Return ONLY these 2 synonyms separated by a comma, without any additional text or explanation.`;
 
       const response = await fetch(`${this.API_URL}?key=${API_KEY}`, {
         method: "POST",
