@@ -18,6 +18,33 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   let detectedLanguage = "en";
 
+  const { savedWord, savedTranslation, savedExample, savedSynonyms, savedArticle } =
+    await chrome.storage.local.get([
+      "savedWord",
+      "savedTranslation",
+      "savedExample",
+      "savedSynonyms",
+      "savedArticle",
+    ]);
+
+  if (savedWord) {
+    originalText.textContent = savedWord;
+  }
+  if (savedTranslation) {
+    translatedText.textContent = savedTranslation;
+  }
+  if (savedExample) {
+    exampleSentenceText.textContent = savedExample;
+  }
+  if (savedSynonyms) {
+    synonymsText.innerHTML = savedSynonyms
+      .map((syn) => `<span class="synonym-tag">${syn}</span>`)
+      .join("");
+  }
+  if (savedArticle) {
+    artikelText.innerHTML = `<span class="artikel-badge">${savedArticle}</span>`;
+  }
+
   async function fetchWordDetails(word) {
     try {
       translatedText.textContent = "Fetching details...";
@@ -58,6 +85,14 @@ document.addEventListener("DOMContentLoaded", async function () {
       if (details.article) {
         artikelText.innerHTML = `<span class="artikel-badge">${details.article}</span>`;
       }
+
+      await chrome.storage.local.set({
+        savedWord: word,
+        savedTranslation: details.translation,
+        savedExample: details.example,
+        savedSynonyms: details.synonyms,
+        savedArticle: details.article,
+      });
 
       translatedText.classList.remove("loading");
     } catch (error) {
