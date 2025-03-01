@@ -15,6 +15,16 @@ body {
   gap: 12px;
 }
 
+.text-icon {
+  display: flex;
+  align-items: center;
+
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+
 .selected-text,
 .translation,
 .example-sentence,
@@ -404,10 +414,13 @@ body.options-page {
   min-height: 600px;
   padding: 0;
 }
-.settings-wrapper {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  padding: 0px 0px;
 }
 
 .settings-icon {
