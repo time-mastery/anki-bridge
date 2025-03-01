@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "German Learning Assistant",
+    "name": "Language Learning Assistant",
     "version": "1.0",
-    "description": "A Chrome extension for learning German with Gemini AI.",
+    "description": "A Chrome extension for learning language with Gemini AI.",
     "icons": {
       "16": "icons/icons-16.png",
       "48": "icons/icons-48.png",
