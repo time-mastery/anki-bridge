@@ -185,8 +185,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const details = await geminiService.getWordDetails(word, targetLang);
 
-      translatedText.textContent = details.translation;
-      exampleSentenceText.textContent = details.example;
+      translatedText.textContent =
+        details.translation || "No translation available";
+      exampleSentenceText.textContent =
+        details.example || "No example available";
 
       if (details.synonyms && details.synonyms.length > 0) {
         synonymsText.innerHTML = details.synonyms
@@ -200,12 +202,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       translatedText.classList.remove("loading");
     } catch (error) {
+      translatedText.classList.remove("loading");
       if (error.message.includes("Resource has been exhausted")) {
         translatedText.textContent =
           "API quota exceeded. Please try again later.";
       } else {
         translatedText.textContent =
           "Failed to fetch details. Please try again.";
+        console.error("Error fetching word details:", error);
       }
       exampleSentenceText.textContent = "";
       synonymsText.innerHTML = "";
