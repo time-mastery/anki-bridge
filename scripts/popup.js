@@ -42,13 +42,14 @@ document.addEventListener("DOMContentLoaded", async function () {
     const text = originalText.textContent;
     if (text) {
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "de-DE";
       utterance.rate = 0.9;
       speechSynthesis.speak(utterance);
     }
   });
 
-  const { preferredLanguage } = await chrome.storage.sync.get(["preferredLanguage"]);
+  const { preferredLanguage } = await chrome.storage.sync.get([
+    "preferredLanguage",
+  ]);
   if (preferredLanguage) {
     languageSelect.value = preferredLanguage;
   }
@@ -82,7 +83,6 @@ document.addEventListener("DOMContentLoaded", async function () {
       await fetchWordDetails(word);
     }
   });
-
   async function translateText(text) {
     try {
       translatedText.textContent = "Translating...";
@@ -91,7 +91,22 @@ document.addEventListener("DOMContentLoaded", async function () {
       synonymsText.innerHTML = "";
       artikelText.textContent = "";
 
-      const targetLang = languageSelect.value === "en" ? "English" : "Persian";
+      const languageMap = {
+        en: "English",
+        es: "Spanish",
+        fr: "French",
+        zh: "Mandarin Chinese",
+        de: "German",
+        fa: "Persian",
+        ja: "Japanese",
+        it: "Italian",
+        ko: "Korean",
+        ru: "Russian",
+        pt: "Portuguese",
+        uk: "Ukrainian",
+      };
+
+      const targetLang = languageMap[languageSelect.value] || "English";
 
       const isWord = !text.includes(" ");
 
@@ -151,7 +166,22 @@ document.addEventListener("DOMContentLoaded", async function () {
       synonymsText.innerHTML = "";
       artikelText.textContent = "";
 
-      const targetLang = languageSelect.value === "en" ? "English" : "Persian";
+      const languageMap = {
+        en: "English",
+        es: "Spanish",
+        fr: "French",
+        zh: "Mandarin Chinese",
+        de: "German",
+        fa: "Persian",
+        ja: "Japanese",
+        it: "Italian",
+        ko: "Korean",
+        ru: "Russian",
+        pt: "Portuguese",
+        uk: "Ukrainian",
+      };
+
+      const targetLang = languageMap[languageSelect.value] || "English";
 
       const details = await geminiService.getWordDetails(word, targetLang);
 
@@ -171,9 +201,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       translatedText.classList.remove("loading");
     } catch (error) {
       if (error.message.includes("Resource has been exhausted")) {
-        translatedText.textContent = "API quota exceeded. Please try again later.";
+        translatedText.textContent =
+          "API quota exceeded. Please try again later.";
       } else {
-        translatedText.textContent = "Failed to fetch details. Please try again.";
+        translatedText.textContent =
+          "Failed to fetch details. Please try again.";
       }
       exampleSentenceText.textContent = "";
       synonymsText.innerHTML = "";
@@ -228,7 +260,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     const translation = translatedText.textContent;
     const article = artikelText.textContent;
     const example = exampleSentenceText.textContent;
-    const synonyms = Array.from(synonymsText.getElementsByClassName("synonym-tag"))
+    const synonyms = Array.from(
+      synonymsText.getElementsByClassName("synonym-tag")
+    )
       .map((tag) => tag.textContent)
       .join(", ");
 
