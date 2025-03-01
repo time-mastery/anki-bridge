@@ -2,6 +2,11 @@
 
 A Chrome extension that helps users learn German using Google's Gemini AI.
 
+## Screenshots
+
+![Extension Interface](./images/screenshot1.png)
+![Settings Panel](./images/screenshot2.png)
+
 ## Setup
 
 1. Get your Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
