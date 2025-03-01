@@ -44,7 +44,7 @@ class GeminiService {
       Do not add or remove any information from the original text.
       Here is the text to translate:
       
-      "${text}"`;
+      ${text}`;
 
       const response = await fetch(`${this.API_URL}?key=${API_KEY}`, {
         method: "POST",
