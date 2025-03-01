@@ -9,7 +9,7 @@
       "128": "icons/icons-128.png"
     },
     "action": {
-      "default_popup": "popup.html",
+      "default_popup": "pages/popup.html",
       "default_icon": {
         "16": "icons/icons-16.png",
         "48": "icons/icons-48.png",
@@ -19,11 +19,11 @@
     "content_security_policy": {
       "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
     },
-    "options_page": "options.html",
+    "options_page": "pages/options.html",
     "permissions": ["contextMenus", "storage", "clipboardWrite"],
     "host_permissions": ["https://generativelanguage.googleapis.com/*"],
     "background": {
-      "service_worker": "background.js",
+      "service_worker": "scripts/background.js",
       "type": "module"
     }
 }

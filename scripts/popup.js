@@ -1,4 +1,4 @@
-import { geminiService } from "./services/gemini.js";
+import { geminiService } from "../services/gemini.js";
 
 document.addEventListener("DOMContentLoaded", async function () {
   const languageSelect = document.getElementById("languageSelect");
