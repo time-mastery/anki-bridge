@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Language Learning Assistant",
+    "name": "Anki Bridge",
     "version": "1.0",
     "description": "A Chrome extension for learning language with Gemini AI.",
     "icons": {

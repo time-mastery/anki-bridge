@@ -4,16 +4,7 @@ A Chrome extension that helps users learn German using Google's Gemini AI.
 
 ## Screenshots
 
-<table>
-  <tr>
-    <td><strong>Extension Interface</strong></td>
-    <td><strong>Settings Panel</strong></td>
-  </tr>
-  <tr>
-    <td><img src="https://drive.usercontent.google.com/download?id=17aJ9v5_IgAkcaanQf7Sn-JNl6KwAbL8N" width="400"></td>
-    <td><img src="https://drive.usercontent.google.com/download?id=1t7UP-wwcEGFFnExIEl55JC9s7hPmn-7r" width="400"></td>
-  </tr>
-</table>
+<img src="https://drive.usercontent.google.com/download?id=1D9MYqTR0mOh0qW_R1Zw8nywnz0b4ybYJ">
 
 ## Setup
 
