@@ -20,7 +20,3 @@ A Chrome extension that helps users learn any language using Google's Gemini AI.
 2. Install the extension in Chrome
 3. Click on the extension icon and enter your API key in the settings
 4. Select your preferred language from the dropdown menu
-
-## Security Note
-
-Never commit your API key to the repository. The extension stores it securely in Chrome's local storage.
